@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRA SYSTEM | Pro Max Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --primary: #00f2ff;
+            --bg-dark: #06080a;
+            --bg-surface: #0a0d12;
+            --border-color: #008899;
+            --text-color: #00f2ff;
+            --text-muted: #005566;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+
+        @keyframes turquoisePulse {
+            0% {
+                color: #00bac2;
+                border-color: #006b7a;
+            }
+
+            50% {
+                color: #00f2ff;
+                border-color: #00f2ff;
+            }
+
+            100% {
+                color: #00bac2;
+                border-color: #006b7a;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            line-height: 1.2;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 2px;
+        }
+
+        body,
+        aside,
+        main,
+        .sidebar-section,
+        input,
+        .btn,
+        .btn-console,
+        #info-terminal {
+            animation: turquoisePulse 4s ease-in-out infinite;
+        }
+
+        #app-container {
+            flex: 1;
+            display: flex;
+            gap: 4px;
+            height: 100%;
+            min-height: 0;
+        }
+
+        aside {
+            width: 270px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            background: var(--bg-surface);
+        }
+
+        .section-label {
+            position: absolute;
+            top: -8px;
+            left: 8px;
+            background: var(--bg-dark);
+            padding: 0 4px;
+            font-size: 9px;
+            color: var(--primary);
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #video-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        /* Video kendi wrapper'ında flex ile büyür */
+        .video-wrapper {
+            flex: 1;
+            position: relative;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Kontrol çubuğu video dışında, her zaman altta sabit */
+        #player-controls {
+            display: flex;
+            padding: 6px 15px;
+            background: #0a0d12;
+            border-top: 1px solid var(--border-color);
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-console {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-console:hover {
+            background: var(--primary);
+            color: #000;
+            animation: none;
+        }
+
+        #info-terminal {
+            height: 28px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 10px;
+            letter-spacing: 1px;
+            overflow: hidden;
+        }
+
+        #info-text {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 15px;
+        }
+
+        #active-channel {
+            white-space: nowrap;
+            opacity: 0.7;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            padding: 6px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .btn {
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--primary);
+            padding: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            color: #000;
+            animation: none;
+        }
+
+        #channels {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .category-header {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 11px;
+            font-weight: bold;
+            background: rgba(0, 242, 255, 0.05);
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header:hover {
+            background: rgba(0, 242, 255, 0.2);
+        }
+
+        .channel-item {
+            padding: 6px 12px;
+            font-size: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.05);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: 0.2s;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .channel-item:hover {
+            background: rgba(0, 242, 255, 0.1);
+        }
+
+        .channel-item.active {
+            background: rgba(0, 242, 255, 0.3);
+            border-left: 3px solid var(--primary);
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .ch-checkbox {
+            margin-right: 8px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        #expiry-info {
+            border: 1px dashed var(--border-color);
+            padding: 6px;
+            font-size: 10px;
+            margin-bottom: 4px;
+            text-align: center;
+            background: rgba(0, 242, 255, 0.02);
+        }
+
+        .search-container {
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            color: var(--primary);
+            padding: 6px 10px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+        }
+
+        /* Kapat Butonu Stili - Video wrapper'a göre konumlanır */
+        .close-stream {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 0, 0, 0.6);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 10px;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .close-stream:hover {
+            background: rgba(255, 0, 0, 1);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app-container">
+        <aside>
+            <div class="sidebar-section" style="flex: 1; min-height: 0; display: flex; flex-direction: column;">
+                <input id="m3uInput" placeholder="M3U / Xtream Link Yapıştır...">
+                <button class="btn" onclick="mainLoad()">▶ SİSTEMİ ÇALIŞTIR</button>
+
+                <div id="expiry-info">
+                    HESAP DURUMU: <span id="exp-date" style="color:var(--primary); font-weight:bold;">BEKLİYOR...</span>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Kanal ara..."
+                        oninput="filterChannels()">
+                </div>
+
+                <div id="channels">
+                    <div style="padding:20px; text-align:center; font-size:10px; opacity:0.5;">LİSTE BEKLENİYOR...</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <span class="section-label">>> TOOLBOX</span>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <label style="font-size: 9px; opacity: 0.7;">BOTS:</label>
+                    <input type="number" value="100"
+                        style="width: 45px; height: 24px; padding: 2px; text-align: center;">
+                    <label style="font-size: 9px; opacity: 0.7; margin-left: auto;">MS:</label>
+                    <input type="number" value="5" style="width: 45px; height: 24px; padding: 2px; text-align: center;">
+                    <button class="btn" title="LİSTEYİ İNDİR" onclick="downloadSelected()"
+                        style="padding: 4px 10px; background:#111; color:var(--primary); border:1px solid var(--primary);">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <main id="mainDisplay">
+            <div id="video-container">
+                <div class="video-wrapper">
+                    <button class="close-stream"
+                        onclick="engine.reset(); document.getElementById('active-channel').innerText = 'CONNECTION: OFFLINE';"
+                        title="Yayını Kapat">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <video id="player" controls></video>
+                </div>
+
+                <div id="player-controls">
+                    <button class="btn-console" onclick="engine.play(currentUrl)" title="OYNAT"><i
+                            class="fa-solid fa-play"></i></button>
+                    <button class="btn-console" onclick="document.getElementById('player').pause()" title="DURAKLAT"><i
+                            class="fa-solid fa-pause"></i></button>
+                    <button class="btn-console" onclick="engine.reset()" title="SIFIRLA"><i
+                            class="fa-solid fa-stop"></i></button>
+                    <div
+                        style="width: 1px; height: 20px; background: var(--border-color); margin: 0 10px; opacity: 0.3;">
+                    </div>
+                    <button class="btn-console" onclick="utils.exportToVLC(currentUrl, currentName)" title="VLC"><i
+                            class="fa-solid fa-rocket"></i> VLC</button>
+                    <button class="btn-console" onclick="utils.copyToClipboard(currentUrl)" title="URL KOPYALA"><i
+                            class="fa-solid fa-link"></i> LİNK</button>
+                </div>
+            </div>
+
+            <div id="info-terminal">
+                <span id="info-text">SYSTEM INITIALIZED. STANDBY...</span>
+                <span id="active-channel">CONNECTION: OFFLINE</span>
+            </div>
+        </main>
+    </div>
+
+    </div>
+
+    <!-- DEPENDENCIES -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.min.js"></script>
+
+    <script>
+        /**
+         * ULTRA NETWORK CORE
+         */
+        const UltraNetwork = {
+            async fetchSmart(url) {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 15000);
+                try {
+                    const r = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timer);
+                    if (r.ok) return await r.text();
+                    throw new Error("HTTP " + r.status);
+                } catch (e) {
+                    clearTimeout(timer);
+                    throw new Error("Bağlantı hatası: " + e.message);
+                }
+            }
+        };
+
+        /**
+         * ULTRA PARSER CORE
+         */
+        const UltraParser = {
+            priority: ["ULUSAL", "YERLI", "YERLİ", "TR", "TÜRK", "TURK", "SPOR", "BELGESEL"],
+            parseM3U(text) {
+                const channels = [];
+                const groupMap = {};
+                let name = "KANAL", group = "GENEL";
+                text.split("\n").forEach(l => {
+                    l = l.trim();
+                    if (l.startsWith("#EXTINF")) {
+                        name = l.split(",").pop().trim();
+                        const g = l.match(/group-title="(.*?)"/i);
+                        group = g ? g[1].toUpperCase() : "GENEL";
+                    } else if (l.startsWith("http")) {
+                        const ch = { name, group, url: l };
+                        channels.push(ch);
+                        if (!groupMap[group]) groupMap[group] = [];
+                        groupMap[group].push(ch);
+                    }
+                });
+                return { channels, groupMap };
+            },
+            parseXtream(streams, categories, server, user, pass) {
+                const groupMap = {};
+                const catMap = {};
+                const channels = [];
+                if (Array.isArray(categories)) categories.forEach(c => catMap[c.category_id] = c.category_name);
+                if (Array.isArray(streams)) {
+                    streams.forEach(s => {
+                        const g = catMap[s.category_id] || "DİĞER";
+                        const link = `${server}/live/${user}/${pass}/${s.stream_id}.ts`;
+                        const ch = { name: s.name, group: g, url: link };
+                        channels.push(ch);
+                        if (!groupMap[g]) groupMap[g] = [];
+                        groupMap[g].push(ch);
+                    });
+                }
+                return { channels, groupMap };
+            },
+            getSortedGroups(groupMap) {
+                return Object.keys(groupMap).sort((a, b) => {
+                    const A = a.toUpperCase();
+                    const B = b.toUpperCase();
+                    let idxA = this.priority.findIndex(p => A.includes(p));
+                    let idxB = this.priority.findIndex(p => B.includes(p));
+                    if (idxA === -1) idxA = 999;
+                    if (idxB === -1) idxB = 999;
+                    if (idxA !== idxB) return idxA - idxB;
+                    return A.localeCompare(B);
+                });
+            }
+        };
+
+        /**
+         * ULTRA PLAYER ENGINE
+         */
+        class UltraPlayer {
+            constructor(videoId) {
+                this.video = document.getElementById(videoId);
+                this.hls = null;
+                this.tsPlayer = null;
+                this.statusCallback = null;
+            }
+            setStatusCallback(cb) { this.statusCallback = cb; }
+            notify(msg) { if (this.statusCallback) this.statusCallback(msg); }
+            play(url) {
+                if (!url) return;
+                this.notify("⌛ ANALİZ EDİLİYOR...");
+                this.resetInternal();
+                const lower = url.toLowerCase();
+                if (lower.includes(".m3u8")) {
+                    this.tryHLS(url);
+                } else {
+                    this.tryTS(url);
+                }
+            }
+            tryHLS(url) {
+                if (Hls.isSupported()) {
+                    this.hls = new Hls({ manifestLoadingMaxRetry: 3, levelLoadingMaxRetry: 3, enableWorker: true });
+                    this.hls.loadSource(url);
+                    this.hls.attachMedia(this.video);
+                    this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        this.notify("🟢 YAYIN AKTİF (HLS)");
+                        this.video.play();
+                    });
+                    this.hls.on(Hls.Events.ERROR, (e, data) => {
+                        if (data.fatal) { this.hls.destroy(); this.hls = null; this.tryTS(url); }
+                    });
+                } else { this.video.src = url; this.video.play(); }
+            }
+            tryTS(url) {
+                if (mpegts.getFeatureList().mseLivePlayback) {
+                    this.tsPlayer = mpegts.createPlayer({ type: 'mpegts', url: url, isLive: true, cors: true });
+                    this.tsPlayer.attachMediaElement(this.video);
+                    this.tsPlayer.load();
+                    this.tsPlayer.play().then(() => { this.notify("🟢 YAYIN AKTİF (TS)"); }).catch(() => { this.tryNative(url); });
+                    this.tsPlayer.on(mpegts.Events.ERROR, () => { this.tryNative(url); });
+                } else { this.tryNative(url); }
+            }
+            tryNative(url) {
+                this.notify("⌛ NATIVE DENENİYOR...");
+                this.video.src = url;
+                this.video.play().then(() => { this.notify("🟢 YAYIN AKTİF (NATIVE)"); }).catch(() => { this.notify("❌ KAYNAK HATASI"); });
+            }
+            resetInternal() {
+                if (this.hls) { this.hls.destroy(); this.hls = null; }
+                if (this.tsPlayer) { this.tsPlayer.destroy(); this.tsPlayer = null; }
+                this.video.pause(); this.video.src = ""; this.video.load();
+            }
+            reset() { this.resetInternal(); this.notify("⏹ DURDURULDU"); }
+        }
+
+        /**
+         * ULTRA UTILS
+         */
+        const UltraUtils = {
+            exportToVLC(url, name = "Kanal") {
+                const m3uContent = `#EXTM3U\n#EXTINF:-1,${name}\n${url}`;
+                const blob = new Blob([m3uContent], { type: 'audio/x-mpegurl' });
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = `${name.replace(/\s+/g, '_')}_izle.m3u`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            },
+            copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => { alert("LİNK KOPYALANDI"); });
+            }
+        };
+
+        // INITIALIZATION
+        const engine = new UltraPlayer("player");
+        const network = UltraNetwork;
+        const parser = UltraParser;
+        const utils = UltraUtils;
+
+        engine.setStatusCallback(updateInfo);
+
+        let groupMap = {};
+        let currentUrl = "";
+        let currentName = "";
+        let selectedChannels = [];
+
+        async function mainLoad() {
+            const url = document.getElementById("m3uInput").value.trim();
+            if (!url) return;
+            document.getElementById("exp-date").innerText = "SORGULANIYOR...";
+            document.getElementById("channels").innerHTML = '<div style="padding:20px; text-align:center; font-size:10px; color:var(--primary);">⌛ SİSTEM ANALİZİ BAŞLADI...</div>';
+
+            try {
+                if (url.includes("get.php") && url.includes("username=")) {
+                    await handleXtream(url);
+                } else {
+                    const text = await network.fetchSmart(url);
+                    const data = parser.parseM3U(text);
+                    groupMap = data.groupMap;
+                    updateInfo(`M3U LOADED: ${data.channels.length} CHANNELS`);
+                }
+                renderCategories();
+            } catch (e) {
+                updateInfo("HATA: " + e.message);
+                document.getElementById("channels").innerHTML = `<div style="padding:20px; text-align:center; font-size:10px; color:red;">HATA: ${e.message}</div>`;
+            }
+        }
+
+        async function handleXtream(url) {
+            const u = new URL(url);
+            const server = `${u.protocol}//${u.host}`;
+            const user = u.searchParams.get("username");
+            const pass = u.searchParams.get("password");
+
+            try {
+                const infoText = await network.fetchSmart(url.replace("get.php", "player_api.php"));
+                const info = JSON.parse(infoText);
+                if (info.user_info && info.user_info.exp_date) {
+                    const d = info.user_info.exp_date;
+                    document.getElementById("exp-date").innerText = d != "0" ? new Date(parseInt(d) * 1000).toLocaleDateString() : "SÜRESİZ";
+                }
+            } catch (e) { console.warn("API Bilgisi alınamadı"); }
+
+            const streamsText = await network.fetchSmart(`${server}/player_api.php?username=${user}&password=${pass}&action=get_live_streams`);
+            const streams = JSON.parse(streamsText);
+            const catsText = await network.fetchSmart(`${server}/player_api.php?username=${user}&password=${pass}&action=get_live_categories`);
+            const cats = JSON.parse(catsText);
+
+            const data = parser.parseXtream(streams, cats, server, user, pass);
+            groupMap = data.groupMap;
+            updateInfo(`XTREAM LOADED: ${data.channels.length} CHANNELS`);
+        }
+
+        function renderCategories() {
+            const container = document.getElementById("channels");
+            container.innerHTML = "";
+            const sorted = parser.getSortedGroups(groupMap);
+            sorted.forEach(g => {
+                const total = groupMap[g].length;
+                const btn = document.createElement("div");
+                btn.className = "category-header";
+                btn.innerHTML = `<span>📁 ${g}</span> <span style="opacity:0.6;">[${total}]</span>`;
+
+                const sub = document.createElement("div");
+                sub.style.display = "none";
+                sub.style.background = "rgba(0,0,0,0.2)";
+
+                btn.onclick = () => {
+                    const isOpening = sub.style.display === "none";
+                    document.querySelectorAll("#channels > div:not(.category-header)").forEach(x => x.style.display = "none");
+                    sub.style.display = isOpening ? "block" : "none";
+                    if (isOpening && sub.innerHTML === "") {
+                        groupMap[g].forEach(ch => {
+                            const div = document.createElement("div");
+                            div.className = "channel-item";
+
+                            const cb = document.createElement("input");
+                            cb.type = "checkbox";
+                            cb.className = "ch-checkbox";
+                            if (selectedChannels.find(x => x.url === ch.url)) cb.checked = true;
+                            cb.onclick = (e) => e.stopPropagation();
+                            cb.onchange = (e) => {
+                                if (e.target.checked) selectedChannels.push(ch);
+                                else selectedChannels = selectedChannels.filter(x => x.url !== ch.url);
+                            };
+
+                            const nameSpan = document.createElement("span");
+                            nameSpan.innerText = ch.name;
+                            nameSpan.style.flex = "1";
+
+                            div.appendChild(cb);
+                            div.appendChild(nameSpan);
+
+                            div.onclick = () => {
+                                document.querySelectorAll(".channel-item").forEach(x => x.classList.remove("active"));
+                                div.classList.add("active");
+                                currentUrl = ch.url; currentName = ch.name;
+                                engine.play(ch.url);
+                                document.getElementById("active-channel").innerText = "LIVE: " + ch.name;
+                            };
+                            sub.appendChild(div);
+                        });
+                    }
+                };
+                container.appendChild(btn);
+                container.appendChild(sub);
+            });
+        }
+
+        function filterChannels() {
+            const query = document.getElementById("searchInput").value.toLowerCase();
+            const container = document.getElementById("channels");
+            if (query === "") { renderCategories(); return; }
+            container.innerHTML = "";
+            let foundCount = 0;
+            Object.keys(groupMap).forEach(g => {
+                const matches = groupMap[g].filter(ch => ch.name.toLowerCase().includes(query));
+                if (matches.length > 0) {
+                    const groupTitle = document.createElement("div");
+                    groupTitle.className = "category-header";
+                    groupTitle.innerHTML = `<span>📁 ${g}</span> <span style="color:var(--primary); font-size:9px;">${matches.length} MATCH</span>`;
+                    const sub = document.createElement("div");
+                    sub.style.display = "block";
+                    matches.forEach(ch => {
+                        const div = document.createElement("div");
+                        div.className = "channel-item";
+                        const cb = document.createElement("input");
+                        cb.type = "checkbox";
+                        cb.className = "ch-checkbox";
+                        if (selectedChannels.find(x => x.url === ch.url)) cb.checked = true;
+                        cb.onchange = (e) => {
+                            if (e.target.checked) selectedChannels.push(ch);
+                            else selectedChannels = selectedChannels.filter(x => x.url !== ch.url);
+                        };
+                        const nameSpan = document.createElement("span");
+                        nameSpan.innerText = ch.name;
+                        div.appendChild(cb);
+                        div.appendChild(nameSpan);
+                        div.onclick = () => {
+                            currentUrl = ch.url; currentName = ch.name;
+                            engine.play(ch.url);
+                            document.getElementById("active-channel").innerText = "LIVE: " + ch.name;
+                        };
+                        sub.appendChild(div);
+                        foundCount++;
+                    });
+                    container.appendChild(groupTitle);
+                    container.appendChild(sub);
+                }
+            });
+            if (foundCount === 0) container.innerHTML = '<div style="padding:20px; text-align:center; font-size:10px; opacity:0.5;">NO MATCH FOUND.</div>';
+        }
+
+        function downloadSelected() {
+            if (selectedChannels.length === 0) { alert("Lütfen kanal seçin!"); return; }
+            let m3u = "#EXTM3U\n";
+            selectedChannels.forEach(ch => { m3u += `#EXTINF:-1 group-title="${ch.group}",${ch.name}\n${ch.url}\n`; });
+            const blob = new Blob([m3u], { type: "text/plain" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "Ultra_Export.m3u";
+            a.click();
+            updateInfo("EXPORT COMPLETED.");
+        }
+
+        function updateInfo(msg) { document.getElementById("info-text").innerText = "LOG >> " + msg; }
+    </script>
+</body>
+
+</html>
