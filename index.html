@@ -51,40 +51,28 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            padding: 2px;
-        }
-
-        body,
-        aside,
-        main,
-        .sidebar-section,
-        input,
-        .btn,
-        .btn-console,
-        #info-terminal {
-            animation: turquoisePulse 4s ease-in-out infinite;
+            padding: 0 !important;
+            margin: 0 !important;
         }
 
         #app-container {
-            display: flex;
-            flex-direction: row;
-            /* Yan yana yerleşim */
-            flex: 1;
-            gap: 4px;
-            height: calc(100vh - 4px);
-            min-height: 0;
-            overflow: hidden;
+            display: flex !important;
+            flex-direction: row !important;
+            height: 100vh !important;
+            width: 100vw !important;
+            overflow: hidden !important;
+            background: var(--bg-dark);
         }
 
         aside {
-            width: 280px;
+            width: 330px !important;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            flex-shrink: 0;
             background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            height: 100%;
+            border-right: 2px solid var(--border-color);
+            height: 100% !important;
+            flex-shrink: 0;
+            z-index: 100;
         }
 
         .sidebar-section {
@@ -148,28 +136,29 @@
         }
 
         #player-controls {
-            display: flex;
-            flex-wrap: wrap;
-            /* TV zoom durumunda butonlar sığmazsa alt satıra geçsin */
-            padding: 10px;
+            display: flex !important;
+            padding: 15px !important;
             background: #0a0d12;
-            border-top: 1px solid var(--border-color);
+            border-top: 2px solid var(--border-color);
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             flex-shrink: 0;
+            height: 90px !important;
         }
 
         .btn-console {
             background: transparent;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             color: var(--primary);
-            padding: 6px 12px;
+            padding: 12px 20px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 15px !important;
+            /* TV Kumandası için büyük ikon/metin */
             transition: 0.2s;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 10px;
+            border-radius: 6px;
         }
 
         .btn-console:hover {
@@ -207,24 +196,25 @@
 
         input {
             background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             color: var(--primary);
-            padding: 10px;
-            font-size: 13px;
-            /* TV için daha büyük yazı */
+            padding: 12px;
+            font-size: 14px;
             outline: none;
             width: 100%;
+            border-radius: 4px;
         }
 
         .btn {
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             background: transparent;
             color: var(--primary);
-            padding: 8px;
+            padding: 12px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 13px;
             transition: 0.2s;
+            border-radius: 4px;
         }
 
         .btn:hover {
@@ -410,38 +400,48 @@
 
     <div id="app-container">
         <aside>
+            <div
+                style="padding: 10px; font-size: 10px; background: #000; border-bottom: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center;">
+                ULTRA PRO MAX <span style="color:#fff;">v1.5 TEST (TV MODU)</span>
+            </div>
             <div class="sidebar-section"
-                style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;">
-                <span class="section-label">>> BAĞLANTI</span>
-                <input id="m3uInput" placeholder="M3U / Xtream Link Yapıştır..." style="margin-top: 5px;">
-                <button class="btn" onclick="mainLoad()" style="padding: 12px; font-size: 12px;">▶ SİSTEMİ
-                    ÇALIŞTIR</button>
+                style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; position: relative;">
+                <span class="section-label">>> BAĞLANTI SİSTEMİ</span>
+                <input id="m3uInput" placeholder="M3U / Xtream Link Yapıştır..." style="margin-top: 10px;">
+                <button class="btn" onclick="mainLoad()"
+                    style="padding: 15px; font-size: 14px; background: var(--primary); color: #000;">▶ SİSTEMİ ANALİZ ET
+                    VE ÇALIŞTIR</button>
 
-                <div id="expiry-info">
-                    HESAP DURUMU: <span id="exp-date" style="color:var(--primary); font-weight:bold;">BEKLİYOR...</span>
+                <div id="expiry-info" style="font-size: 11px; padding: 10px;">
+                    HESAP DURUMU: <span id="exp-date"
+                        style="color:var(--primary); font-weight:bold;">SORGULANIYOR...</span>
                 </div>
 
                 <div class="search-container">
                     <input type="text" id="searchInput" class="search-input" placeholder="Kanal ara..."
-                        oninput="filterChannels()" style="padding: 8px;">
+                        oninput="filterChannels()" style="padding: 12px; font-size: 13px;">
                 </div>
 
-                <div id="channels" style="flex: 1; min-height: 0;">
-                    <div style="padding:20px; text-align:center; font-size:11px; opacity:0.5;">LİSTE BEKLENİYOR...</div>
+                <div id="channels" style="flex: 1; min-height: 0; border: 1px solid rgba(0,242,255,0.2);">
+                    <div
+                        style="padding:40px 20px; text-align:center; font-size:12px; opacity:0.8; color: var(--primary);">
+                        <i class="fa-solid fa-satellite-dish fa-spin"
+                            style="font-size: 20px; margin-bottom: 10px;"></i><br>
+                        LÜTFEN LİNK GİRİP BUTONA BASIN
+                    </div>
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <span class="section-label">>> TOOLBOX</span>
+            <div class="sidebar-section" style="background: rgba(0,0,0,0.5);">
                 <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; gap: 4px; align-items: center;">
-                        <label style="font-size: 10px; opacity: 0.7;">BOTS:</label>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <span style="font-size: 11px; color: var(--primary);">BOTS:</span>
                         <input type="number" value="100"
-                            style="width: 50px; height: 28px; padding: 2px; text-align: center; font-size: 11px;">
+                            style="width: 60px; height: 32px; padding: 2px; text-align: center; font-size: 13px; background: #000;">
                     </div>
                     <button class="btn" title="LİSTEYİ İNDİR" onclick="downloadSelected()"
-                        style="padding: 6px 15px; background:#111; color:var(--primary); border:1px solid var(--primary);">
-                        <i class="fa-solid fa-download"></i>
+                        style="padding: 10px 20px; background:#000; color:var(--primary); border:2px solid var(--primary); border-radius: 4px;">
+                        <i class="fa-solid fa-download"></i> İNDİR
                     </button>
                 </div>
             </div>
