@@ -66,27 +66,32 @@
         }
 
         #app-container {
-            flex: 1;
             display: flex;
+            flex-direction: row;
+            /* Yan yana yerleşim */
+            flex: 1;
             gap: 4px;
-            height: 100%;
+            height: calc(100vh - 4px);
             min-height: 0;
+            overflow: hidden;
         }
 
         aside {
-            width: 270px;
+            width: 280px;
             display: flex;
             flex-direction: column;
             gap: 4px;
             flex-shrink: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            height: 100%;
         }
 
         .sidebar-section {
-            border: 1px solid var(--border-color);
-            padding: 8px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             position: relative;
             background: var(--bg-surface);
         }
@@ -97,7 +102,7 @@
             left: 8px;
             background: var(--bg-dark);
             padding: 0 4px;
-            font-size: 9px;
+            font-size: 10px;
             color: var(--primary);
             font-weight: bold;
             z-index: 10;
@@ -111,6 +116,8 @@
             background: var(--bg-surface);
             position: relative;
             overflow: hidden;
+            min-width: 0;
+            /* Flexbox taşma önleyici */
         }
 
         #video-container {
@@ -119,33 +126,36 @@
             flex-direction: column;
             background: #000;
             position: relative;
-            overflow: hidden;
             min-height: 0;
         }
 
-        /* Video kendi wrapper'ında flex ile büyür */
         .video-wrapper {
             flex: 1;
             position: relative;
             min-height: 0;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
         }
 
         video {
+            max-width: 100%;
+            max-height: 100%;
             width: 100%;
             height: 100%;
             object-fit: contain;
-            display: block;
         }
 
-        /* Kontrol çubuğu video dışında, her zaman altta sabit */
         #player-controls {
             display: flex;
-            padding: 6px 15px;
+            flex-wrap: wrap;
+            /* TV zoom durumunda butonlar sığmazsa alt satıra geçsin */
+            padding: 10px;
             background: #0a0d12;
             border-top: 1px solid var(--border-color);
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
         }
 
@@ -196,12 +206,14 @@
         }
 
         input {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid var(--border-color);
             color: var(--primary);
-            padding: 6px;
-            font-size: 11px;
+            padding: 10px;
+            font-size: 13px;
+            /* TV için daha büyük yazı */
             outline: none;
+            width: 100%;
         }
 
         .btn {
@@ -340,6 +352,57 @@
             transform: scale(1.1);
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
         }
+
+        /* Renk Ayarı Paneli */
+        #color-panel {
+            display: none;
+            position: absolute;
+            bottom: 45px;
+            right: 15px;
+            background: rgba(10, 13, 18, 0.9);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+            width: 220px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        .color-control {
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .color-control label {
+            font-size: 10px;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .color-control input[type=range] {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 242, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 2px;
+        }
+
+        .color-control input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--primary);
+        }
     </style>
 </head>
 
@@ -347,9 +410,12 @@
 
     <div id="app-container">
         <aside>
-            <div class="sidebar-section" style="flex: 1; min-height: 0; display: flex; flex-direction: column;">
-                <input id="m3uInput" placeholder="M3U / Xtream Link Yapıştır...">
-                <button class="btn" onclick="mainLoad()">▶ SİSTEMİ ÇALIŞTIR</button>
+            <div class="sidebar-section"
+                style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;">
+                <span class="section-label">>> BAĞLANTI</span>
+                <input id="m3uInput" placeholder="M3U / Xtream Link Yapıştır..." style="margin-top: 5px;">
+                <button class="btn" onclick="mainLoad()" style="padding: 12px; font-size: 12px;">▶ SİSTEMİ
+                    ÇALIŞTIR</button>
 
                 <div id="expiry-info">
                     HESAP DURUMU: <span id="exp-date" style="color:var(--primary); font-weight:bold;">BEKLİYOR...</span>
@@ -357,24 +423,24 @@
 
                 <div class="search-container">
                     <input type="text" id="searchInput" class="search-input" placeholder="Kanal ara..."
-                        oninput="filterChannels()">
+                        oninput="filterChannels()" style="padding: 8px;">
                 </div>
 
-                <div id="channels">
-                    <div style="padding:20px; text-align:center; font-size:10px; opacity:0.5;">LİSTE BEKLENİYOR...</div>
+                <div id="channels" style="flex: 1; min-height: 0;">
+                    <div style="padding:20px; text-align:center; font-size:11px; opacity:0.5;">LİSTE BEKLENİYOR...</div>
                 </div>
             </div>
 
             <div class="sidebar-section">
                 <span class="section-label">>> TOOLBOX</span>
-                <div style="display: flex; gap: 5px; align-items: center;">
-                    <label style="font-size: 9px; opacity: 0.7;">BOTS:</label>
-                    <input type="number" value="100"
-                        style="width: 45px; height: 24px; padding: 2px; text-align: center;">
-                    <label style="font-size: 9px; opacity: 0.7; margin-left: auto;">MS:</label>
-                    <input type="number" value="5" style="width: 45px; height: 24px; padding: 2px; text-align: center;">
+                <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <label style="font-size: 10px; opacity: 0.7;">BOTS:</label>
+                        <input type="number" value="100"
+                            style="width: 50px; height: 28px; padding: 2px; text-align: center; font-size: 11px;">
+                    </div>
                     <button class="btn" title="LİSTEYİ İNDİR" onclick="downloadSelected()"
-                        style="padding: 4px 10px; background:#111; color:var(--primary); border:1px solid var(--primary);">
+                        style="padding: 6px 15px; background:#111; color:var(--primary); border:1px solid var(--primary);">
                         <i class="fa-solid fa-download"></i>
                     </button>
                 </div>
@@ -390,6 +456,37 @@
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                     <video id="player" controls></video>
+
+                    <div id="color-panel">
+                        <div
+                            style="font-size: 12px; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid rgba(0,242,255,0.3); padding-bottom: 5px; text-align: center; color: var(--primary);">
+                            <i class="fa-solid fa-sliders"></i> GÖRÜNTÜ AYARLARI
+                        </div>
+
+                        <div class="color-control">
+                            <label>Parlaklık <span id="val-brightness">100%</span></label>
+                            <input type="range" id="brightness" min="0" max="200" value="100"
+                                oninput="applyVideoFilters()">
+                        </div>
+                        <div class="color-control">
+                            <label>Kontrast <span id="val-contrast">100%</span></label>
+                            <input type="range" id="contrast" min="0" max="200" value="100"
+                                oninput="applyVideoFilters()">
+                        </div>
+                        <div class="color-control">
+                            <label>Renk (Doygunluk) <span id="val-saturation">100%</span></label>
+                            <input type="range" id="saturation" min="0" max="200" value="100"
+                                oninput="applyVideoFilters()">
+                        </div>
+                        <div class="color-control">
+                            <label>Ton (Hue) <span id="val-hue">0°</span></label>
+                            <input type="range" id="hue" min="-180" max="180" value="0" oninput="applyVideoFilters()">
+                        </div>
+                        <button class="btn-console" style="width: 100%; justify-content: center; margin-top: 10px;"
+                            onclick="resetVideoFilters()">
+                            <i class="fa-solid fa-rotate-left"></i> SIFIRLA
+                        </button>
+                    </div>
                 </div>
 
                 <div id="player-controls">
@@ -406,6 +503,8 @@
                             class="fa-solid fa-rocket"></i> VLC</button>
                     <button class="btn-console" onclick="utils.copyToClipboard(currentUrl)" title="URL KOPYALA"><i
                             class="fa-solid fa-link"></i> LİNK</button>
+                    <button class="btn-console" onclick="toggleColorPanel()" title="GÖRÜNTÜ VE RENK AYARI"><i
+                            class="fa-solid fa-palette"></i> AYAR</button>
                 </div>
             </div>
 
@@ -427,18 +526,45 @@
          * ULTRA NETWORK CORE
          */
         const UltraNetwork = {
+            proxies: [
+                'https://cors-anywhere.herokuapp.com/',
+                'https://corsproxy.io/?',
+                'https://api.allorigins.win/raw?url='
+            ],
+
             async fetchSmart(url) {
                 const controller = new AbortController();
                 const timer = setTimeout(() => controller.abort(), 15000);
+
+                // İlk deneme: Proxy olmadan (Extention varsa veya CORS açıksa)
                 try {
                     const r = await fetch(url, { signal: controller.signal });
-                    clearTimeout(timer);
-                    if (r.ok) return await r.text();
-                    throw new Error("HTTP " + r.status);
+                    if (r.ok) {
+                        clearTimeout(timer);
+                        return await r.text();
+                    }
                 } catch (e) {
-                    clearTimeout(timer);
-                    throw new Error("Bağlantı hatası: " + e.message);
+                    // Doğrudan istek başarısız oldu
                 }
+
+                // Proxy denemeleri
+                for (const p of this.proxies) {
+                    try {
+                        let fUrl = p + encodeURIComponent(url);
+                        if (p.includes('corsproxy')) fUrl = p + url; // corsproxy url encode istemeyebiliyor
+
+                        const r = await fetch(fUrl, { signal: controller.signal });
+                        if (r.ok) {
+                            clearTimeout(timer);
+                            return await r.text();
+                        }
+                    } catch (e) {
+                        // Sırada ki proxy'ye geç
+                    }
+                }
+
+                clearTimeout(timer);
+                throw new Error("Bağlantı hatası: Failed to fetch (CORS Proxy denendi)");
             }
         };
 
@@ -530,7 +656,12 @@
                         this.video.play();
                     });
                     this.hls.on(Hls.Events.ERROR, (e, data) => {
-                        if (data.fatal) { this.hls.destroy(); this.hls = null; this.tryTS(url); }
+                        if (data.fatal) {
+                            console.warn("HLS Başarısız, TS Deneniyor...");
+                            this.hls.destroy();
+                            this.hls = null;
+                            this.tryTS(url);
+                        }
                     });
                 } else { this.video.src = url; this.video.play(); }
             }
@@ -546,7 +677,7 @@
             tryNative(url) {
                 this.notify("⌛ NATIVE DENENİYOR...");
                 this.video.src = url;
-                this.video.play().then(() => { this.notify("🟢 YAYIN AKTİF (NATIVE)"); }).catch(() => { this.notify("❌ KAYNAK HATASI"); });
+                this.video.play().then(() => { this.notify("🟢 YAYIN AKTİF (NATIVE)"); }).catch(() => { this.notify("❌ KANAL AÇILMIYOR (KAYNAK HATASI)"); });
             }
             resetInternal() {
                 if (this.hls) { this.hls.destroy(); this.hls = null; }
@@ -747,6 +878,39 @@
         }
 
         function updateInfo(msg) { document.getElementById("info-text").innerText = "LOG >> " + msg; }
+
+        // VIDEO FILTER FUNCTIONS
+        function toggleColorPanel() {
+            const panel = document.getElementById('color-panel');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+            } else {
+                panel.style.display = 'block';
+            }
+        }
+
+        function applyVideoFilters() {
+            const b = document.getElementById('brightness').value;
+            const c = document.getElementById('contrast').value;
+            const s = document.getElementById('saturation').value;
+            const h = document.getElementById('hue').value;
+
+            document.getElementById('val-brightness').innerText = b + '%';
+            document.getElementById('val-contrast').innerText = c + '%';
+            document.getElementById('val-saturation').innerText = s + '%';
+            document.getElementById('val-hue').innerText = h + '°';
+
+            const player = document.getElementById('player');
+            player.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) hue-rotate(${h}deg)`;
+        }
+
+        function resetVideoFilters() {
+            document.getElementById('brightness').value = 100;
+            document.getElementById('contrast').value = 100;
+            document.getElementById('saturation').value = 100;
+            document.getElementById('hue').value = 0;
+            applyVideoFilters();
+        }
     </script>
 </body>
 
