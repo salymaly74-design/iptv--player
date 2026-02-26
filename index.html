@@ -51,35 +51,42 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            padding: 0 !important;
-            margin: 0 !important;
+            padding: 2px;
+        }
+
+        body,
+        aside,
+        main,
+        .sidebar-section,
+        input,
+        .btn,
+        .btn-console,
+        #info-terminal {
+            animation: turquoisePulse 4s ease-in-out infinite;
         }
 
         #app-container {
-            display: flex !important;
-            flex-direction: row !important;
-            height: 100vh !important;
-            width: 100vw !important;
-            overflow: hidden !important;
-            background: var(--bg-dark);
+            flex: 1;
+            display: flex;
+            gap: 4px;
+            height: 100%;
+            min-height: 0;
         }
 
         aside {
-            width: 330px !important;
+            width: 270px;
             display: flex;
             flex-direction: column;
-            background: var(--bg-surface);
-            border-right: 2px solid var(--border-color);
-            height: 100% !important;
+            gap: 4px;
             flex-shrink: 0;
-            z-index: 100;
         }
 
         .sidebar-section {
-            padding: 10px;
+            border: 1px solid var(--border-color);
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             position: relative;
             background: var(--bg-surface);
         }
@@ -90,7 +97,7 @@
             left: 8px;
             background: var(--bg-dark);
             padding: 0 4px;
-            font-size: 10px;
+            font-size: 9px;
             color: var(--primary);
             font-weight: bold;
             z-index: 10;
@@ -104,8 +111,6 @@
             background: var(--bg-surface);
             position: relative;
             overflow: hidden;
-            min-width: 0;
-            /* Flexbox taşma önleyici */
         }
 
         #video-container {
@@ -114,51 +119,47 @@
             flex-direction: column;
             background: #000;
             position: relative;
+            overflow: hidden;
             min-height: 0;
         }
 
+        /* Video kendi wrapper'ında flex ile büyür */
         .video-wrapper {
             flex: 1;
             position: relative;
             min-height: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
+            overflow: hidden;
         }
 
         video {
-            max-width: 100%;
-            max-height: 100%;
             width: 100%;
             height: 100%;
             object-fit: contain;
+            display: block;
         }
 
+        /* Kontrol çubuğu video dışında, her zaman altta sabit */
         #player-controls {
-            display: flex !important;
-            padding: 15px !important;
+            display: flex;
+            padding: 6px 15px;
             background: #0a0d12;
-            border-top: 2px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
             align-items: center;
-            gap: 15px;
+            gap: 8px;
             flex-shrink: 0;
-            height: 90px !important;
         }
 
         .btn-console {
             background: transparent;
-            border: 2px solid var(--border-color);
+            border: 1px solid var(--border-color);
             color: var(--primary);
-            padding: 12px 20px;
+            padding: 6px 12px;
             cursor: pointer;
-            font-size: 15px !important;
-            /* TV Kumandası için büyük ikon/metin */
+            font-size: 11px;
             transition: 0.2s;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-radius: 6px;
+            gap: 5px;
         }
 
         .btn-console:hover {
@@ -195,26 +196,23 @@
         }
 
         input {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
             color: var(--primary);
-            padding: 12px;
-            font-size: 14px;
+            padding: 6px;
+            font-size: 11px;
             outline: none;
-            width: 100%;
-            border-radius: 4px;
         }
 
         .btn {
-            border: 2px solid var(--border-color);
+            border: 1px solid var(--border-color);
             background: transparent;
             color: var(--primary);
-            padding: 12px;
+            padding: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 11px;
             transition: 0.2s;
-            border-radius: 4px;
         }
 
         .btn:hover {
@@ -301,6 +299,40 @@
             padding: 6px 10px;
             font-size: 11px;
             outline: none;
+        }
+
+        /* Tip Filtre Butonları */
+        .filter-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            padding: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            color: var(--primary);
+            padding: 5px 0;
+            font-size: 9px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+            opacity: 0.6;
+        }
+
+        .filter-btn:hover {
+            background: rgba(0, 242, 255, 0.1);
+            opacity: 1;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #000;
+            opacity: 1;
+            font-weight: bold;
         }
 
         ::-webkit-scrollbar {
@@ -400,48 +432,41 @@
 
     <div id="app-container">
         <aside>
-            <div
-                style="padding: 10px; font-size: 10px; background: #000; border-bottom: 1px solid var(--primary); color: var(--primary); font-weight: bold; text-align: center;">
-                ULTRA PRO MAX <span style="color:#fff;">v1.5 TEST (TV MODU)</span>
-            </div>
-            <div class="sidebar-section"
-                style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; position: relative;">
-                <span class="section-label">>> BAĞLANTI SİSTEMİ</span>
-                <input id="m3uInput" placeholder="M3U / Xtream Link Yapıştır..." style="margin-top: 10px;">
-                <button class="btn" onclick="mainLoad()"
-                    style="padding: 15px; font-size: 14px; background: var(--primary); color: #000;">▶ SİSTEMİ ANALİZ ET
-                    VE ÇALIŞTIR</button>
+            <div class="sidebar-section" style="flex: 1; min-height: 0; display: flex; flex-direction: column;">
+                <input id="m3uInput" placeholder="M3U / Xtream Link Yapıştır...">
+                <button class="btn" onclick="mainLoad()">▶ SİSTEMİ ÇALIŞTIR</button>
 
-                <div id="expiry-info" style="font-size: 11px; padding: 10px;">
-                    HESAP DURUMU: <span id="exp-date"
-                        style="color:var(--primary); font-weight:bold;">SORGULANIYOR...</span>
+                <div id="expiry-info">
+                    HESAP DURUMU: <span id="exp-date" style="color:var(--primary); font-weight:bold;">BEKLİYOR...</span>
+                </div>
+
+                <div class="filter-container">
+                    <button id="btn-live" class="filter-btn active" onclick="setFilter('live')">📡 CANLI</button>
+                    <button id="btn-vod" class="filter-btn" onclick="setFilter('vod')">🎬 FİLM</button>
+                    <button id="btn-series" class="filter-btn" onclick="setFilter('series')">📺 DİZİ</button>
                 </div>
 
                 <div class="search-container">
                     <input type="text" id="searchInput" class="search-input" placeholder="Kanal ara..."
-                        oninput="filterChannels()" style="padding: 12px; font-size: 13px;">
+                        oninput="filterChannels()">
                 </div>
 
-                <div id="channels" style="flex: 1; min-height: 0; border: 1px solid rgba(0,242,255,0.2);">
-                    <div
-                        style="padding:40px 20px; text-align:center; font-size:12px; opacity:0.8; color: var(--primary);">
-                        <i class="fa-solid fa-satellite-dish fa-spin"
-                            style="font-size: 20px; margin-bottom: 10px;"></i><br>
-                        LÜTFEN LİNK GİRİP BUTONA BASIN
-                    </div>
+                <div id="channels">
+                    <div style="padding:20px; text-align:center; font-size:10px; opacity:0.5;">LİSTE BEKLENİYOR...</div>
                 </div>
             </div>
 
-            <div class="sidebar-section" style="background: rgba(0,0,0,0.5);">
-                <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; gap: 6px; align-items: center;">
-                        <span style="font-size: 11px; color: var(--primary);">BOTS:</span>
-                        <input type="number" value="100"
-                            style="width: 60px; height: 32px; padding: 2px; text-align: center; font-size: 13px; background: #000;">
-                    </div>
+            <div class="sidebar-section">
+                <span class="section-label">>> TOOLBOX</span>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <label style="font-size: 9px; opacity: 0.7;">BOTS:</label>
+                    <input type="number" value="100"
+                        style="width: 45px; height: 24px; padding: 2px; text-align: center;">
+                    <label style="font-size: 9px; opacity: 0.7; margin-left: auto;">MS:</label>
+                    <input type="number" value="5" style="width: 45px; height: 24px; padding: 2px; text-align: center;">
                     <button class="btn" title="LİSTEYİ İNDİR" onclick="downloadSelected()"
-                        style="padding: 10px 20px; background:#000; color:var(--primary); border:2px solid var(--primary); border-radius: 4px;">
-                        <i class="fa-solid fa-download"></i> İNDİR
+                        style="padding: 4px 10px; background:#111; color:var(--primary); border:1px solid var(--primary);">
+                        <i class="fa-solid fa-download"></i>
                     </button>
                 </div>
             </div>
@@ -459,10 +484,9 @@
 
                     <div id="color-panel">
                         <div
-                            style="font-size: 12px; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid rgba(0,242,255,0.3); padding-bottom: 5px; text-align: center; color: var(--primary);">
+                            style="font-size: 10px; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid rgba(0,242,255,0.3); padding-bottom: 5px; text-align: center; color: var(--primary);">
                             <i class="fa-solid fa-sliders"></i> GÖRÜNTÜ AYARLARI
                         </div>
-
                         <div class="color-control">
                             <label>Parlaklık <span id="val-brightness">100%</span></label>
                             <input type="range" id="brightness" min="0" max="200" value="100"
@@ -496,6 +520,8 @@
                             class="fa-solid fa-pause"></i></button>
                     <button class="btn-console" onclick="engine.reset()" title="SIFIRLA"><i
                             class="fa-solid fa-stop"></i></button>
+                    <button class="btn-console" onclick="toggleColorPanel()" title="GÖRÜNTÜ AYARLARI"><i
+                            class="fa-solid fa-palette"></i></button>
                     <div
                         style="width: 1px; height: 20px; background: var(--border-color); margin: 0 10px; opacity: 0.3;">
                     </div>
@@ -503,8 +529,6 @@
                             class="fa-solid fa-rocket"></i> VLC</button>
                     <button class="btn-console" onclick="utils.copyToClipboard(currentUrl)" title="URL KOPYALA"><i
                             class="fa-solid fa-link"></i> LİNK</button>
-                    <button class="btn-console" onclick="toggleColorPanel()" title="GÖRÜNTÜ VE RENK AYARI"><i
-                            class="fa-solid fa-palette"></i> AYAR</button>
                 </div>
             </div>
 
@@ -515,58 +539,54 @@
         </main>
     </div>
 
-    </div>
-
     <!-- DEPENDENCIES -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.min.js"></script>
 
     <script>
+
         /**
          * ULTRA NETWORK CORE
          */
         const UltraNetwork = {
             proxies: [
-                'https://cors-anywhere.herokuapp.com/',
                 'https://corsproxy.io/?',
-                'https://api.allorigins.win/raw?url='
+                'https://api.allorigins.win/raw?url=',
+                'https://cors-anywhere.herokuapp.com/'
             ],
-
-            async fetchSmart(url) {
+            async fetchWithTimeout(url, ms = 10000) {
                 const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), 15000);
-
-                // İlk deneme: Proxy olmadan (Extention varsa veya CORS açıksa)
+                const timer = setTimeout(() => controller.abort(), ms);
                 try {
                     const r = await fetch(url, { signal: controller.signal });
-                    if (r.ok) {
-                        clearTimeout(timer);
-                        return await r.text();
-                    }
+                    clearTimeout(timer);
+                    if (r.ok) return await r.text();
+                    console.warn(`Fetch returned ${r.status} for ${url}`);
+                    return null;
                 } catch (e) {
-                    // Doğrudan istek başarısız oldu
+                    clearTimeout(timer);
+                    return null;
                 }
+            },
+            async fetchSmart(url, label = "Data") {
+                updateInfo(`${label}: Doğrudan deneniyor...`);
+                const direct = await this.fetchWithTimeout(url);
+                if (direct) return direct;
 
-                // Proxy denemeleri
-                for (const p of this.proxies) {
+                for (let i = 0; i < this.proxies.length; i++) {
+                    const p = this.proxies[i];
+                    updateInfo(`${label}: Proxy ${i + 1} deneniyor...`);
                     try {
-                        let fUrl = p + encodeURIComponent(url);
-                        if (p.includes('corsproxy')) fUrl = p + url; // corsproxy url encode istemeyebiliyor
-
-                        const r = await fetch(fUrl, { signal: controller.signal });
-                        if (r.ok) {
-                            clearTimeout(timer);
-                            return await r.text();
-                        }
-                    } catch (e) {
-                        // Sırada ki proxy'ye geç
-                    }
+                        // Kritik: URL her zaman encode edilmeli, yoksa & sembolleri proxy parametresi sanılır.
+                        const fUrl = p + encodeURIComponent(url);
+                        const result = await this.fetchWithTimeout(fUrl);
+                        if (result) return result;
+                    } catch (e) { }
                 }
-
-                clearTimeout(timer);
-                throw new Error("Bağlantı hatası: Failed to fetch (CORS Proxy denendi)");
+                throw new Error(`${label} yüklenemedi. (CORS veya Bağlantı Hatası)`);
             }
         };
+
 
         /**
          * ULTRA PARSER CORE
@@ -584,24 +604,55 @@
                         const g = l.match(/group-title="(.*?)"/i);
                         group = g ? g[1].toUpperCase() : "GENEL";
                     } else if (l.startsWith("http")) {
-                        const ch = { name, group, url: l };
+                        const lowerUrl = l.toLowerCase();
+                        const lowerName = name.toLowerCase();
+                        let prefix = "📡 "; // Varsayılan: Canlı
+
+                        // Film tespiti (Uzantı veya isim üzerinden)
+                        if (lowerUrl.match(/\.(mp4|mkv|avi|mov|m4v)$/) ||
+                            lowerName.includes("vod") ||
+                            group.includes("FİLM") ||
+                            group.includes("MOVIE")) {
+                            prefix = "🎬 ";
+                        }
+                        // Dizi tespiti (S01E01 formatı veya Sezon/Bölüm kelimeleri)
+                        if (lowerName.match(/s\d+[\s.]?e\d+/i) ||
+                            lowerName.includes("sezon") ||
+                            lowerName.includes("bölüm") ||
+                            group.includes("DİZİ") ||
+                            group.includes("SERIES")) {
+                            prefix = "📺 ";
+                        }
+
+                        const finalGroup = prefix + group;
+                        const ch = { name, group: finalGroup, url: l };
                         channels.push(ch);
-                        if (!groupMap[group]) groupMap[group] = [];
-                        groupMap[group].push(ch);
+                        if (!groupMap[finalGroup]) groupMap[finalGroup] = [];
+                        groupMap[finalGroup].push(ch);
                     }
                 });
                 return { channels, groupMap };
             },
-            parseXtream(streams, categories, server, user, pass) {
+            parseXtream(streams, categories, server, user, pass, type = 'live') {
                 const groupMap = {};
                 const catMap = {};
                 const channels = [];
+                const prefix = type === 'vod' ? '🎬 ' : (type === 'series' ? '📺 ' : '📡 ');
+
                 if (Array.isArray(categories)) categories.forEach(c => catMap[c.category_id] = c.category_name);
                 if (Array.isArray(streams)) {
                     streams.forEach(s => {
-                        const g = catMap[s.category_id] || "DİĞER";
-                        const link = `${server}/live/${user}/${pass}/${s.stream_id}.ts`;
-                        const ch = { name: s.name, group: g, url: link };
+                        const origGroup = catMap[s.category_id] || "DİĞER";
+                        const g = prefix + origGroup.toUpperCase();
+                        let link;
+                        if (type === 'live') {
+                            link = `${server}/live/${user}/${pass}/${s.stream_id}.ts`;
+                        } else if (type === 'vod') {
+                            link = `${server}/movie/${user}/${pass}/${s.stream_id}.${s.container_extension || 'mp4'}`;
+                        } else {
+                            link = `${server}/series/${user}/${pass}/${s.stream_id}.${s.container_extension || 'mp4'}`;
+                        }
+                        const ch = { name: s.name, group: g, url: link, type: type };
                         channels.push(ch);
                         if (!groupMap[g]) groupMap[g] = [];
                         groupMap[g].push(ch);
@@ -613,6 +664,13 @@
                 return Object.keys(groupMap).sort((a, b) => {
                     const A = a.toUpperCase();
                     const B = b.toUpperCase();
+
+                    // Önce tip önceliği (Live > Movie > Series)
+                    const getWeight = (s) => s.startsWith('📡') ? 1 : (s.startsWith('🎬') ? 2 : 3);
+                    const wA = getWeight(A);
+                    const wB = getWeight(B);
+                    if (wA !== wB) return wA - wB;
+
                     let idxA = this.priority.findIndex(p => A.includes(p));
                     let idxB = this.priority.findIndex(p => B.includes(p));
                     if (idxA === -1) idxA = 999;
@@ -656,12 +714,7 @@
                         this.video.play();
                     });
                     this.hls.on(Hls.Events.ERROR, (e, data) => {
-                        if (data.fatal) {
-                            console.warn("HLS Başarısız, TS Deneniyor...");
-                            this.hls.destroy();
-                            this.hls = null;
-                            this.tryTS(url);
-                        }
+                        if (data.fatal) { this.hls.destroy(); this.hls = null; this.tryTS(url); }
                     });
                 } else { this.video.src = url; this.video.play(); }
             }
@@ -677,7 +730,7 @@
             tryNative(url) {
                 this.notify("⌛ NATIVE DENENİYOR...");
                 this.video.src = url;
-                this.video.play().then(() => { this.notify("🟢 YAYIN AKTİF (NATIVE)"); }).catch(() => { this.notify("❌ KANAL AÇILMIYOR (KAYNAK HATASI)"); });
+                this.video.play().then(() => { this.notify("🟢 YAYIN AKTİF (NATIVE)"); }).catch(() => { this.notify("❌ KAYNAK HATASI"); });
             }
             resetInternal() {
                 if (this.hls) { this.hls.destroy(); this.hls = null; }
@@ -717,6 +770,14 @@
         let currentUrl = "";
         let currentName = "";
         let selectedChannels = [];
+        let activeFilter = 'live'; // Varsayılan: Canlı
+
+        function setFilter(type) {
+            activeFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${type}`).classList.add('active');
+            renderCategories();
+        }
 
         async function mainLoad() {
             const url = document.getElementById("m3uInput").value.trim();
@@ -741,39 +802,78 @@
         }
 
         async function handleXtream(url) {
-            const u = new URL(url);
-            const server = `${u.protocol}//${u.host}`;
-            const user = u.searchParams.get("username");
-            const pass = u.searchParams.get("password");
-
             try {
-                const infoText = await network.fetchSmart(url.replace("get.php", "player_api.php"));
-                const info = JSON.parse(infoText);
-                if (info.user_info && info.user_info.exp_date) {
-                    const d = info.user_info.exp_date;
-                    document.getElementById("exp-date").innerText = d != "0" ? new Date(parseInt(d) * 1000).toLocaleDateString() : "SÜRESİZ";
+                const u = new URL(url);
+                const server = `${u.protocol}//${u.host}`;
+                const user = u.searchParams.get("username");
+                const pass = u.searchParams.get("password");
+
+                if (!user || !pass) throw new Error("URL'de kullanıcı adı veya şifre eksik!");
+
+                updateInfo("BAĞLANTI KURULUYOR...");
+                try {
+                    const infoText = await network.fetchSmart(url.replace("get.php", "player_api.php"));
+                    const info = JSON.parse(infoText);
+                    if (info.user_info && info.user_info.exp_date) {
+                        const d = info.user_info.exp_date;
+                        document.getElementById("exp-date").innerText = d != "0" ? new Date(parseInt(d) * 1000).toLocaleDateString() : "SÜRESİZ";
+                    }
+                } catch (e) { console.warn("API Bilgisi alınamadı"); }
+
+                groupMap = {};
+                let totalChannels = 0;
+
+                const segments = [
+                    { action: 'get_live_streams', cat: 'get_live_categories', type: 'live', name: 'CANLI' },
+                    { action: 'get_vod_streams', cat: 'get_vod_categories', type: 'vod', name: 'FİLM' },
+                    { action: 'get_series', cat: 'get_series_categories', type: 'series', name: 'DİZİ' }
+                ];
+
+                for (const seg of segments) {
+                    try {
+                        updateInfo(`${seg.name} listesi hazırlanıyor...`);
+                        const [sTxt, cTxt] = await Promise.all([
+                            network.fetchSmart(`${server}/player_api.php?username=${user}&password=${pass}&action=${seg.action}`, `${seg.name} Yayın`),
+                            network.fetchSmart(`${server}/player_api.php?username=${user}&password=${pass}&action=${seg.cat}`, `${seg.name} Kategori`)
+                        ]);
+
+                        if (sTxt && cTxt) {
+                            updateInfo(`${seg.name} verisi işleniyor...`);
+                            const data = parser.parseXtream(JSON.parse(sTxt), JSON.parse(cTxt), server, user, pass, seg.type);
+                            Object.assign(groupMap, data.groupMap);
+                            totalChannels += data.channels.length;
+                        }
+                    } catch (e) {
+                        console.error(`${seg.name} yükleme hatası:`, e);
+                        updateInfo(`${seg.name} alınamadı, diğerine geçiliyor...`);
+                    }
                 }
-            } catch (e) { console.warn("API Bilgisi alınamadı"); }
 
-            const streamsText = await network.fetchSmart(`${server}/player_api.php?username=${user}&password=${pass}&action=get_live_streams`);
-            const streams = JSON.parse(streamsText);
-            const catsText = await network.fetchSmart(`${server}/player_api.php?username=${user}&password=${pass}&action=get_live_categories`);
-            const cats = JSON.parse(catsText);
-
-            const data = parser.parseXtream(streams, cats, server, user, pass);
-            groupMap = data.groupMap;
-            updateInfo(`XTREAM LOADED: ${data.channels.length} CHANNELS`);
+                updateInfo(`XTREAM BAŞARILI: ${totalChannels} KANAL YÜKLENDİ.`);
+            } catch (e) {
+                throw new Error("Xtream Hatası: " + e.message);
+            }
         }
 
         function renderCategories() {
             const container = document.getElementById("channels");
             container.innerHTML = "";
-            const sorted = parser.getSortedGroups(groupMap);
+
+            // Filtreye göre grupları ayıkla
+            const prefix = activeFilter === 'live' ? '📡' : (activeFilter === 'vod' ? '🎬' : '📺');
+            const filteredGroups = Object.keys(groupMap).filter(g => g.startsWith(prefix));
+
+            if (filteredGroups.length === 0) {
+                container.innerHTML = `<div style="padding:20px; text-align:center; font-size:10px; opacity:0.5;">BU KATEGORİDE İÇERİK BULUNAMADI.</div>`;
+                return;
+            }
+
+            const sorted = parser.getSortedGroups(groupMap).filter(g => g.startsWith(prefix));
             sorted.forEach(g => {
                 const total = groupMap[g].length;
                 const btn = document.createElement("div");
                 btn.className = "category-header";
-                btn.innerHTML = `<span>📁 ${g}</span> <span style="opacity:0.6;">[${total}]</span>`;
+                btn.innerHTML = `<span>${g}</span> <span style="opacity:0.6;">[${total}]</span>`;
 
                 const sub = document.createElement("div");
                 sub.style.display = "none";
@@ -810,7 +910,7 @@
                                 div.classList.add("active");
                                 currentUrl = ch.url; currentName = ch.name;
                                 engine.play(ch.url);
-                                document.getElementById("active-channel").innerText = "LIVE: " + ch.name;
+                                document.getElementById("active-channel").innerText = "PLAYING: " + ch.name;
                             };
                             sub.appendChild(div);
                         });
@@ -832,7 +932,7 @@
                 if (matches.length > 0) {
                     const groupTitle = document.createElement("div");
                     groupTitle.className = "category-header";
-                    groupTitle.innerHTML = `<span>📁 ${g}</span> <span style="color:var(--primary); font-size:9px;">${matches.length} MATCH</span>`;
+                    groupTitle.innerHTML = `<span>${g}</span> <span style="color:var(--primary); font-size:9px;">${matches.length} MATCH</span>`;
                     const sub = document.createElement("div");
                     sub.style.display = "block";
                     matches.forEach(ch => {
@@ -853,7 +953,7 @@
                         div.onclick = () => {
                             currentUrl = ch.url; currentName = ch.name;
                             engine.play(ch.url);
-                            document.getElementById("active-channel").innerText = "LIVE: " + ch.name;
+                            document.getElementById("active-channel").innerText = "PLAYING: " + ch.name;
                         };
                         sub.appendChild(div);
                         foundCount++;
@@ -877,40 +977,36 @@
             updateInfo("EXPORT COMPLETED.");
         }
 
-        function updateInfo(msg) { document.getElementById("info-text").innerText = "LOG >> " + msg; }
-
-        // VIDEO FILTER FUNCTIONS
         function toggleColorPanel() {
-            const panel = document.getElementById('color-panel');
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
-            } else {
-                panel.style.display = 'block';
-            }
+            const p = document.getElementById("color-panel");
+            p.style.display = p.style.display === "block" ? "none" : "block";
         }
 
         function applyVideoFilters() {
-            const b = document.getElementById('brightness').value;
-            const c = document.getElementById('contrast').value;
-            const s = document.getElementById('saturation').value;
-            const h = document.getElementById('hue').value;
+            const b = document.getElementById("brightness").value;
+            const c = document.getElementById("contrast").value;
+            const s = document.getElementById("saturation").value;
+            const h = document.getElementById("hue").value;
 
-            document.getElementById('val-brightness').innerText = b + '%';
-            document.getElementById('val-contrast').innerText = c + '%';
-            document.getElementById('val-saturation').innerText = s + '%';
-            document.getElementById('val-hue').innerText = h + '°';
+            document.getElementById("val-brightness").innerText = b + "%";
+            document.getElementById("val-contrast").innerText = c + "%";
+            document.getElementById("val-saturation").innerText = s + "%";
+            document.getElementById("val-hue").innerText = h + "°";
 
-            const player = document.getElementById('player');
-            player.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) hue-rotate(${h}deg)`;
+            const v = document.getElementById("player");
+            v.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) hue-rotate(${h}deg)`;
         }
 
         function resetVideoFilters() {
-            document.getElementById('brightness').value = 100;
-            document.getElementById('contrast').value = 100;
-            document.getElementById('saturation').value = 100;
-            document.getElementById('hue').value = 0;
+            document.getElementById("brightness").value = 100;
+            document.getElementById("contrast").value = 100;
+            document.getElementById("saturation").value = 100;
+            document.getElementById("hue").value = 0;
             applyVideoFilters();
         }
+
+        function updateInfo(msg) { document.getElementById("info-text").innerText = "LOG >> " + msg; }
+
     </script>
 </body>
 
